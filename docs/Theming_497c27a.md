@@ -16,8 +16,9 @@ OpenUI5 supports you when creating and using different visual designs - called *
 
 On top of pure CSS, OpenUI5 offers a variety of optional features that add value regarding modularization, modification, compatibility, and performance:
 
--   CSS variables, mixins, color calculations and other functions, provided by the Open Source library [LESS](http://lesscss.org/)
--   In particular, CSS variables are used for centrally defined and centrally modifiable colors
+-   [CSS Custom Properties](https://developer.mozilla.org/en-US/docs/Web/CSS/--*) providing all theming related colors, metrics, ... (available since UI5 1.127.0)
+-   Variables, mixins, color calculations and other functions, provided by the Open Source library [LESS](http://lesscss.org/) (deprecated since UI5 1.127.0)
+-   In particular, variables are used for centrally defined and centrally modifiable colors
 -   Compilation of one CSS file per control library from modular per-control CSS files
 -   Optimization/compression of CSS size
 -   Clean browser switch and mobile platform detection available \(inside CSS code\)
@@ -26,7 +27,7 @@ On top of pure CSS, OpenUI5 offers a variety of optional features that add value
 
 To ensure these functions, OpenUI5 uses the following components:
 
--   A CSS generator with several functions: LESS processing \(CSS variables substitution etc.\), merge of CSS files created for different themes and controls for optimal runtime consumption, as well as compression or right-to-left substitution if required.
+-   A CSS generator with several functions: LESS processing \(CSS variables substitution etc.\), merge of CSS files created for different themes and controls for optimal runtime consumption, as well as compression or right-to-left substitution if required. (Hint: with the availability of the CSS Custom Properties the LESS processing will be removed soon once all UI5 libraries are using the CSS Custom Properties consistently)
 -   The OpenUI5 runtime handles the loading of the appropriate CSS file for the control libraries used in the application page by adding `<style>` tags to the document head. There is also an API available for switching themes, which replaces the CSS URLs and therefore does not modify the application state.
 
 ***
