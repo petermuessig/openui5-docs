@@ -16,45 +16,42 @@ On top of pure CSS, OpenUI5 offers advanced theming concepts and functions which
 
 ### CSS Variables, Functions and More
 
-OpenUI5 uses the popular CSS preprocessor [LESS](http://lesscss.org/). This tool introduces several features, including CSS variables, a concept which has also been heavily demanded by the CSS community: In any UI5-controlled CSS file, variables can be defined and can then be referenced anywhere in the CSS code of the same library. These variables are mainly used for colors. All CSS variables are global. The CSS variable concept contributes to a consistent way of implementing and changing the styles.
-
-LESS adds more features like color calculations, mixins, and CSS selector nesting. The color calculations are used in OpenUI5 to derive many different color shades from just a few variables.
+OpenUI5 provides a set of [CSS Custom Properties](https://developer.mozilla.org/en-US/docs/Web/CSS/--*) which allows you to make your application or custom controls theming-aware. The CSS Custom Properties are provided by the [SAP Theming Base Content](https://github.com/SAP/theming-base-content). The SAP Theming Base Content contains all necessary data to connect to the SAP global theming infrastructure. The content exposes the central set of colors, metrics and resources of a theme. UI5 applications or custom controls can easily make use of the CSS Custom Properties of the SAP Theming Base Content. This concept contributes to a consistent way of implementing and changing the styles. CSS provides a lot of additional features like calculations, nesting, and more. 
 
 Here is the syntax:
 
 ```
-@sapUiText: #000000; /* define the text color as 'black' */
+:root {
+    ...
+    --sapTextColor: #000000;
+}
 
 button {
-   color: @sapUiText; /* buttons will automatically have the current text color, which is '#000000' right now */
+    color: var(--sapTextColor); /* buttons will automatically have the current text color, which is '#000000' right now */
     [...]
 }
 
 ```
 
-LESS then takes care of substituting all references to a CSS variable by the current value of this variable. This happens during the build of the control library.
+The browser then takes care of substituting all references to a CSS Custom Property by the current value of this variable. This happens during at runtime and in case of the CSS Custom Property changes it will affect all usages.
 
-> ### Note:  
-> In development scenarios this LESS processing might even happen at runtime in the browser to shorten the build time for OpenUI5 libraries. This is indicated by a *less mode* rectangle when a page is launched.
+Additionally, a specific theme can modify the CSS Custom Property values given by the base theme. So a control can just define its text color to use `--sapTextColor` by default which will automatically take care of applying the correct color for every theme or user modification: The theme generation will create one CSS file per theme, and the usage of the CSS Custom Property ensures that always the theme-dependent value will be taken into account. So a visually very different theme can easily be created by simply changing a number of colors.
 
-Additionally, a specific theme can modify the CSS parameter values given by the base theme. So a control can just define its text color to use `sapUiText` by default which will automatically take care of applying the correct color for every theme or user modification: The theme generation will create one CSS file per theme, and the substitution of the CSS parameter references will always take the theme-dependent value into account. So a visually very different theme can easily be created by simply changing a number of colors.
+While every library and control can introduce their own CSS Custom Properties, those provided by the SAP Theming Base Content are most important. Ideally, there should only be a few of them, and they should be simple enough to be understood by most end users \(similar to what the Windows operating system offers end users\), but still cover as many aspects of the visual appearance as necessary to make them sufficient for most customer-required theme modifications. Ideally, these CSS Custom Properties are based on existing ones provided by the SAP Theming Base Content to be theming-aware.
 
-While every library and control can introduce their own CSS variables, those defined in `global.css` are most important. Ideally, there should only be a few of them, and they should be simple enough to be understood by most end users \(similar to what the Windows operating system offers end users\), but still cover as many aspects of the visual appearance as necessary to make them sufficient for most customer-required theme modifications.
+Additional benefits of CSS Custom Properties are, for example:
 
-Additional benefits of CSS variables are, for example:
-
--   They can be used to generically build simple styling tools that allow for a limited degree of freedom \(=changing the CSS parameter values\). The UI theme designer is an example of such a tool.
+-   They can be used to generically build simple styling tools that allow for a limited degree of freedom \(=changing the CSS Custom Properties values\). The UI theme designer is an example of such a tool.
 -   They can also be linked to metadata, for example, to which group of colors they belong, to which colors they need to have some visual contrast.
 
 ***
 
 ### Compilation of One CSS File
 
-OpenUI5 CSS generation does not only substitute the CSS variable values but also merges all CSS files of a control library into **one** file that is loaded at runtime, thus increasing the performance.
+OpenUI5 CSS generation merges all CSS files of a control library into **one** file that is loaded at runtime, thus increasing the performance.
 
 Here are some of the reasons why you would not want to have all styles defined within one file during development:
 
--   Less collisions and merging when different developers edit the styles of their controls
 -   Clear separation between the styles for different controls, which helps to estimate and test the impact of a CSS modification
 -   Keeping the door open for future optimization regarding runtime performance and data transfer by tailoring CSS files on server side that only contain the CSS required on the current application page
 
